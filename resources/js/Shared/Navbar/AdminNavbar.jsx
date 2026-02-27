@@ -12,7 +12,7 @@ import {
 import { IoClose, IoMailOpenOutline } from "react-icons/io5";
 import { MdOutlineSettings } from "react-icons/md";
 import { TbCurrencyDollar } from "react-icons/tb";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import { toast } from "react-toastify";
 import Logo from "../../assets/logo/wbLogo.png";
 import UseAxiosSecure from "../../Hooks/UseAxiosSecure";
@@ -30,12 +30,14 @@ const AdminNavbar = () => {
     const nextLanguage = language === "en" ? "bn" : "en";
     const axiosSecure = UseAxiosSecure();
 
-    // ✅ FIXED (Inertia way)
     const { url } = usePage();
 
     const dropdownRef = useRef(null);
     const profileImageRef = useRef(null);
     const [isDropdownVisible, setDropdownVisible] = useState(false);
+    const isActive = (path) => {
+        return url === path || url.startsWith(path + "/");
+    };
 
     const notificationDropdownRef = useRef(null);
     const notificationIconRef = useRef(null);
@@ -51,7 +53,6 @@ const AdminNavbar = () => {
     const examPrefixes = ["/from", "/login", "/register"];
     const settingsPrefixes = ["/support"];
 
-    // ✅ FIXED active check
     const isParentActive = (prefixes) =>
         prefixes.some((p) => startsWithSegment(url, p));
 
@@ -69,7 +70,7 @@ const AdminNavbar = () => {
         setTheme(newTheme);
         toast.success(
             newTheme === "dark" ? "Dark Mode Enabled" : "Light Mode Enabled",
-            { position: "top-right", autoClose: 2000, theme: newTheme }
+            { position: "top-right", autoClose: 2000, theme: newTheme },
         );
     };
 
@@ -83,17 +84,13 @@ const AdminNavbar = () => {
     return (
         <>
             <div className="navbar sticky top-0 left-0 w-full z-40 px-5 bg-base-200 shadow-sm">
-                
-                {/* LOGO */}
                 <div className="navbar-start -my-4">
                     <Link href="/dashboard">
                         <img src={Logo} alt="logo" />
                     </Link>
                 </div>
 
-                {/* Desktop Nav */}
                 <ul className="navbar-center hidden lg:flex space-x-2">
-                    
                     <li>
                         <Link
                             href="/dashboard"
@@ -104,19 +101,13 @@ const AdminNavbar = () => {
                     </li>
 
                     <li>
-                        <Link
-                            href="/table"
-                            className={navLinkClass("/table")}
-                        >
+                        <Link href="/table" className={navLinkClass("/table")}>
                             {t.table}
                         </Link>
                     </li>
 
                     <li>
-                        <Link
-                            href="/card"
-                            className={navLinkClass("/card")}
-                        >
+                        <Link href="/card" className={navLinkClass("/card")}>
                             {t.card}
                         </Link>
                     </li>
@@ -131,10 +122,7 @@ const AdminNavbar = () => {
                     </li>
 
                     <li>
-                        <Link
-                            href="/from"
-                            className={navLinkClass("/from")}
-                        >
+                        <Link href="/from" className={navLinkClass("/from")}>
                             {t.form}
                         </Link>
                     </li>
@@ -158,10 +146,7 @@ const AdminNavbar = () => {
                     </li>
                 </ul>
 
-                {/* Right Side */}
                 <div className="navbar-end">
-                    
-                    {/* Theme Toggle */}
                     <button onClick={handleThemeToggle}>
                         {theme === "light" ? (
                             <GoSun className="text-2xl" />
@@ -170,7 +155,6 @@ const AdminNavbar = () => {
                         )}
                     </button>
 
-                    {/* Profile */}
                     <div
                         ref={profileImageRef}
                         onClick={toggleDropdown}
@@ -189,7 +173,6 @@ const AdminNavbar = () => {
                             className="absolute right-8 top-14 mt-3 w-56 bg-base-100 shadow-lg rounded-md"
                         >
                             <ul className="py-3 space-y-3">
-
                                 <li>
                                     <Link
                                         href="/admin/profile"
@@ -249,7 +232,7 @@ const AdminNavbar = () => {
                                     <button
                                         onClick={() => {
                                             localStorage.clear();
-                                            window.location.href = "/login";
+                                            router.visit("/login");
                                         }}
                                         className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-error text-white"
                                     >

@@ -9,7 +9,7 @@ import { MdBlock } from "react-icons/md";
 import { RiDeleteBinLine, RiResetLeftFill } from "react-icons/ri";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { url } from "../../connection";
+import { url } from "../connection";
 import UseAuth from "../Hooks/UseAuth";
 import UseAxiosSecure from "../Hooks/UseAxiosSecure";
 import defaultPhoto from "../assets/logo/defaultPhoto.png";

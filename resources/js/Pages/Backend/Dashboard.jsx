@@ -13,7 +13,7 @@ const Dashboard = () => {
     const t = Translations[language];
 
     return (
-        <div className="p-6 space-y-8 bg-base-100 min-h-screen">
+        <div className="p-6 space-y-8 bg-base-100 min-h-screen bg-[#F7F5F3]">
             {/* ===== Welcome Section ===== */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-primary-content p-8 rounded-2xl shadow-lg">
                 <div>
@@ -41,7 +41,7 @@ const Dashboard = () => {
             {/* ===== Cards Section ===== */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Students */}
-                <div className="bg-base-200 p-6 rounded-xl shadow hover:shadow-lg transition">
+                <div className="bg-white bg-base-200 p-6 rounded-xl shadow hover:shadow-lg transition">
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm text-primary-content">
@@ -58,7 +58,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Teachers */}
-                <div className="bg-base-200 p-6 rounded-xl shadow hover:shadow-lg transition">
+                <div className="bg-white bg-base-200 p-6 rounded-xl shadow hover:shadow-lg transition">
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm text-primary-content">
@@ -75,7 +75,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Subjects */}
-                <div className="bg-base-200 p-6 rounded-xl shadow hover:shadow-lg transition">
+                <div className="bg-white bg-base-200 p-6 rounded-xl shadow hover:shadow-lg transition">
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm text-primary-content">
@@ -92,7 +92,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Results */}
-                <div className="bg-base-200 p-6 rounded-xl shadow hover:shadow-lg transition">
+                <div className="bg-white bg-base-200 p-6 rounded-xl shadow hover:shadow-lg transition">
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm text-primary-content">

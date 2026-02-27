@@ -29,7 +29,46 @@ use App\Http\Controllers\Backend\SupportTicket\SupportTicketController;
 use App\Http\Controllers\Backend\DocumentationManage\DocumentationCategoryController;
 use App\Http\Controllers\Backend\DocumentationManage\DocumentationController;
 use App\Http\Controllers\Backend\DocumentationManage\DocumentationTagController;
+use Inertia\Inertia;
 
+/***************************************
+|  INERTIA ADMIN ROUTES
+ ***************************************/
+
+Route::middleware(['auth'])->group(function () {
+
+	Route::get('/', function () {
+		return redirect('/deshboard');
+	});
+
+	Route::get('/deshboard', function () {
+		return Inertia::render('AdminPages/Deshboard/Deshboard');
+	});
+
+	Route::get('/table', function () {
+		return Inertia::render('componentes/Table');
+	});
+
+	Route::get('/card', function () {
+		return Inertia::render('Card');
+	});
+
+	Route::get('/cardtable', function () {
+		return Inertia::render('Cardtable');
+	});
+
+	Route::get('/from', function () {
+		return Inertia::render('From');
+	});
+
+	Route::get('/setting', function () {
+		return Inertia::render('Setting');
+	});
+
+	Route::get('/profile', function () {
+		return Inertia::render('Profile/Profile');
+	});
+});
 
 
 
@@ -45,18 +84,18 @@ Route::get('password-forgot',                      [App\Http\Controllers\Auth\Lo
 Route::post('password-forgot-OTP-sent',            [App\Http\Controllers\Auth\LoginController::class, 'forgotPasswordOTPSent'])->name('password-forgot-OTP-sent');
 Route::get('forgot-pass-verify-OTP/{user_email}', [App\Http\Controllers\Auth\LoginController::class, 'getForgotVerifyOtpPage'])->name('get-forgot-pass-verify-OTP-page');
 Route::post('password-change',                     [App\Http\Controllers\Auth\LoginController::class, 'forgotPassVerifyOtp'])->name('post-forgot-pass-verify-OTP');
-Route::get('resend-OTP-for-password-change/{user_email}',[App\Http\Controllers\Auth\LoginController::class, 'resendOtpForPassChange'])->name('resend-OTP-for-password-change');
+Route::get('resend-OTP-for-password-change/{user_email}', [App\Http\Controllers\Auth\LoginController::class, 'resendOtpForPassChange'])->name('resend-OTP-for-password-change');
 Route::post('get-password-update',                    [App\Http\Controllers\Auth\LoginController::class, 'webUserPasswordUpdate'])->name('get-password-update');
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::group(['middleware' => ['auth']], function() {
+Route::group(['middleware' => ['auth']], function () {
 	Route::get('/logout', 								[App\Http\Controllers\Backend\AdminController::class, 'adminLogout'])->name('admin.logout');
 	Route::get('/package-renew', 						[App\Http\Controllers\Backend\AdminController::class, 'renewPage'])->name('package-renew');
 	Route::post('save-package-renew', 					[App\Http\Controllers\Backend\AdminController::class, 'saveRenewData'])->name('save-package-renew');
 	Route::get('/bkash/callback',                     	[App\Http\Controllers\Backend\AdminController::class, 'bkashCallback'])->name('bkash.callback');
-  	Route::get('view-package-purchase-invoice/{ticketing_id}', [App\Http\Controllers\Backend\AdminController::class, 'showInvoice'])->name('view-package-purchase-invoice');
-	
+	Route::get('view-package-purchase-invoice/{ticketing_id}', [App\Http\Controllers\Backend\AdminController::class, 'showInvoice'])->name('view-package-purchase-invoice');
+
 	Route::middleware(['check.package'])->group(function () {
 		Route::get('/admin/dashboard', 						[App\Http\Controllers\Backend\AdminController::class, 'adminDashboard'])->name('admin.home');
 		Route::get('/admin/dashboard', 						[App\Http\Controllers\Backend\AdminController::class, 'adminDashboard'])->name('admin.dashboard');
@@ -82,7 +121,7 @@ Route::group(['middleware' => ['auth']], function() {
 		Route::get('account-profile/{id}', 				[App\Http\Controllers\Backend\Account\AccountController::class, 'accountProfile'])->name('account-profile');
 		Route::post('add-transfer-amount', 				[App\Http\Controllers\Backend\Account\AccountController::class, 'addTranserData'])->name('add-transfer-amount');
 		Route::post('update-transfer-amount', 			[App\Http\Controllers\Backend\Account\AccountController::class, 'updateTranserData'])->name('update-transfer-amount');
-		
+
 		//For Package Controller Section...
 		//Package Category
 		Route::resource('package-category', PackageCategoryController::class);
@@ -240,10 +279,9 @@ Route::group(['middleware' => ['auth']], function() {
 		//Expense
 		Route::get('print-all-expense-receipt/{id}',		[App\Http\Controllers\Backend\PrintInvoice\PrintInvoiceController::class, 'printAExRe'])->name('print-all-expense-receipt');
 	});
-
 });
 
-require __DIR__.'/webuser.php';
+require __DIR__ . '/webuser.php';
 
 Auth::routes();
 

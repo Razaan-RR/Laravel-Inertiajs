@@ -71,26 +71,26 @@
     ====================== --}}
 
     <!-- jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script> -->
 
     <!-- Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="{{asset('backend')}}/template-assets/js/bootstrap.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="{{asset('backend')}}/template-assets/js/bootstrap.min.js"></script> -->
 
     <!-- Plugins -->
-    <script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <!-- <script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="{{asset('backend')}}/custom/js/flatpickr.min.js"></script>
+    <script src="{{asset('backend')}}/custom/js/flatpickr.min.js"></script> -->
 
     <!-- SweetAlert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
 
     <!-- Legacy / theme JS -->
-    <script src="{{asset('backend')}}/template-assets/js/scritp.js"></script>
+    <!-- <script src="{{asset('backend')}}/template-assets/js/scritp.js"></script>
     <script src="{{asset('backend')}}/image-preview/js/lightcase.js"></script>
     <script src="{{asset('backend')}}/image-preview/js/swiper.min.js"></script>
     <script src="{{asset('backend')}}/image-preview/js/progress.js"></script>
-    <script src="{{asset('backend')}}/image-preview/js/functions.js"></script>
+    <script src="{{asset('backend')}}/image-preview/js/functions.js"></script> -->
 
 </body>
 
