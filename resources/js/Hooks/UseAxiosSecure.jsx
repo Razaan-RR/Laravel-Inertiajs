@@ -1,5 +1,5 @@
 import axios from "axios";
-import { url } from "../../connection";
+import { url } from "../../js/connection";
 
 const UseAxiosSecure = () => {
     const axiosSecure = axios.create({

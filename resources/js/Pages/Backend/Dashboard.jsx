@@ -6,6 +6,7 @@ import {
     FaUserGraduate,
 } from "react-icons/fa";
 import { Translations } from "../../utils/Translations";
+import AdminLayout from "../../Layout/AdminLayout";
 
 const Dashboard = () => {
     const language = "en";
@@ -117,3 +118,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+Dashboard.layout = (page) => <AdminLayout>{page}</AdminLayout>;
