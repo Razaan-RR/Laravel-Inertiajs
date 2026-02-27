@@ -112,7 +112,7 @@ p,
 h1, h2, h3, h4, h5, h6,
 span,
 label {
-    color: var(--color-text-main) !important;
+    color: var(--color-text-main);
 }
 
 /* ======================================================
@@ -1040,6 +1040,10 @@ POS Lay out Css.
 
 .navbar-brand:hover {
     color: var(--color-primary) !important;
+}
+
+.text-muted {
+  color: var(--color-text-secondary) !important;
 }
 
 /*
