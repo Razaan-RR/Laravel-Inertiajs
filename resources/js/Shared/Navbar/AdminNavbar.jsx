@@ -12,7 +12,7 @@ import {
 import { IoClose, IoMailOpenOutline } from "react-icons/io5";
 import { MdOutlineSettings } from "react-icons/md";
 import { TbCurrencyDollar } from "react-icons/tb";
-import { Link, usePage } from "@inertiajs/inertia-react";
+import { Link, usePage } from "@inertiajs/react";
 import { toast } from "react-toastify";
 import Logo from "../../assets/logo/wbLogo.png";
 import UseAxiosSecure from "../../Hooks/UseAxiosSecure";
@@ -86,7 +86,7 @@ const AdminNavbar = () => {
                 
                 {/* LOGO */}
                 <div className="navbar-start -my-4">
-                    <Link href="/deshboard">
+                    <Link href="/dashboard">
                         <img src={Logo} alt="logo" />
                     </Link>
                 </div>
@@ -96,8 +96,8 @@ const AdminNavbar = () => {
                     
                     <li>
                         <Link
-                            href="/deshboard"
-                            className={navLinkClass("/deshboard")}
+                            href="/dashboard"
+                            className={navLinkClass("/dashboard")}
                         >
                             {t.dashboard}
                         </Link>

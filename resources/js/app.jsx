@@ -1,26 +1,39 @@
 import "../css/app.css";
-import { createInertiaApp } from "@inertiajs/inertia-react";
+import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import React from "react";
+import { createInertiaApp } from "@inertiajs/react";
+import AuthProvider from "./ContextAPI/AuthProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Aos from "aos";
 
-import AuthProvider from "./ContextAPI/AuthProvider"; 
+Aos.init();
 
-const pages = import.meta.glob("./Pages/**/*.jsx");
+const queryClient = new QueryClient();
 
 createInertiaApp({
     resolve: (name) => {
+        const pages = import.meta.glob("./Pages/**/*.jsx");
         const page = pages[`./Pages/${name}.jsx`];
         if (!page) throw new Error(`Page not found: ${name}`);
         return page();
     },
 
     setup({ el, App, props }) {
-        const root = createRoot(el);
-
-        root.render(
-            <AuthProvider>
-                <App {...props} />
-            </AuthProvider>
+        createRoot(el).render(
+            <StrictMode>
+                <QueryClientProvider client={queryClient}>
+                    <AuthProvider>
+                        <App {...props} />
+                        <ToastContainer
+                            position="top-right"
+                            autoClose={2000}
+                            theme="colored"
+                        />
+                    </AuthProvider>
+                </QueryClientProvider>
+            </StrictMode>,
         );
     },
 });
