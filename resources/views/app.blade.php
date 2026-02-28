@@ -16,11 +16,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- google fonts  -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;500;600;700&family=Raleway:wght@300&family=Roboto:ital,wght@0,100;1,900&family=Yuji+Hentaigana+Akari&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- google icon  -->
     <link rel="stylesheet"

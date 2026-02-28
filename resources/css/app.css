@@ -1,2 +1,9 @@
 @import "tailwindcss";
 @import "aos/dist/aos.css";
+
+@layer base {
+  body {
+    font-family: 'Roboto', sans-serif;
+    color: #2F2B3DE6;
+  }
+}
