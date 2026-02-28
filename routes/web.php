@@ -35,56 +35,58 @@ use Inertia\Inertia;
 |  INERTIA ADMIN ROUTES
  ***************************************/
 
-Route::middleware(['auth'])->group(function () {
-
-	Route::get('/', function () {
-		return redirect('/dashboard');
-	});
-
-	Route::get('/dashboard', function () {
-		return Inertia::render('AdminPages/Dashboard/Dashboard');
-	});
-
-	Route::get('/table', function () {
-		return Inertia::render('Table');
-	});
-
-	Route::get('/card', function () {
-		return Inertia::render('Card');
-	});
-
-	Route::get('/cardtable', function () {
-		return Inertia::render('Cardtable');
-	});
-
-	Route::get('/form', function () {
-		return Inertia::render('Form');
-	});
-
-	Route::get('/setting', function () {
-		return Inertia::render('Setting');
-	});
-
-	Route::get('/profile', function () {
-		return Inertia::render('Profile/Profile');
-	});
+Route::get('/', function () {
+	return redirect('/admin/dashboard');
 });
 
+Route::middleware(['auth'])
+	->prefix('admin')
+	->group(function () {
+
+		Route::get('/dashboard', function () {
+			return Inertia::render('AdminPages/Dashboard/Dashboard');
+		})->name('admin.dashboard');
+
+		Route::get('/table', function () {
+			return Inertia::render('Table');
+		})->name('admin.table');
+
+		Route::get('/card', function () {
+			return Inertia::render('Card');
+		})->name('admin.card');
+
+		Route::get('/cardtable', function () {
+			return Inertia::render('Cardtable');
+		})->name('admin.cardtable');
+
+		Route::get('/form', function () {
+			return Inertia::render('Form');
+		})->name('admin.form');
+
+		Route::get('/setting', function () {
+			return Inertia::render('Setting');
+		})->name('admin.setting');
+
+		Route::get('/profile', function () {
+			return Inertia::render('Profile/Profile');
+		})->name('admin.profile');
+	});
+
 Route::post('/theme', function (\Illuminate\Http\Request $request) {
-    $request->validate([
-        'theme' => 'required|in:light,dark',
-    ]);
+	$request->validate([
+		'theme' => 'required|in:light,dark',
+	]);
 
-    session(['theme' => $request->theme]);
+	session(['theme' => $request->theme]);
 
-    return back();
+	return back();
 })->name('theme.update');
 
 
 
 Route::get('/', 					[App\Http\Controllers\Frontend\FrontendController::class, 'index'])->name('welcome');
 Route::get('/access-denied', 		[App\Http\Controllers\Frontend\FrontendController::class, 'accessDenied'])->name('error.accessDenied');
-Auth::routes();
+// Auth::routes();
 Route::get('/login',       								[App\Http\Controllers\Auth\LoginController::class, 'getLoginPageForAdmin'])->name('login');
 Route::get('/admin-login',       						[App\Http\Controllers\Auth\LoginController::class, 'getLoginPage'])->name('admin.login');
 Route::post('/admin-login',   							[App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
@@ -225,7 +227,7 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('get-expense-receipt-payment-invoice/{id}', [App\Http\Controllers\Backend\ExpenseManagement\ExpenseReceiptController::class, 'getBillPaymentInvoice'])->name('get-expense-receipt-payment-invoice');
 		Route::get('download-expense-receipt-payment-invoice-page/{id}', 		[App\Http\Controllers\Backend\ExpenseManagement\ExpenseReceiptController::class, 'downloadBillPayInvoicePage'])->name('download-expense-receipt-payment-invoice-page');
 		Route::get('print-expense-receipt-payment-invoice-page/{id}', 			[App\Http\Controllers\Backend\ExpenseManagement\ExpenseReceiptController::class, 'printBillPayInvoicePage'])->name('print-expense-receipt-payment-invoice-page');
-		Route::post('get-single-product-details', 								[App\Http\Controllers\Backend\ExpenseManagement\BillingPaymentController::class, 'singleSD'])->name('get-single-product-details');
+		// Route::post('get-single-product-details', 								[App\Http\Controllers\Backend\ExpenseManagement\BillingPaymentController::class, 'singleSD'])->name('get-single-product-details');
 
 		// Income Management...
 		Route::resource('receiver', ReceiverController::class);
@@ -286,12 +288,12 @@ Route::group(['middleware' => ['auth']], function () {
 
 		//To Invoice Print...
 		//Expense
-		Route::get('print-all-expense-receipt/{id}',		[App\Http\Controllers\Backend\PrintInvoice\PrintInvoiceController::class, 'printAExRe'])->name('print-all-expense-receipt');
+		// Route::get('print-all-expense-receipt/{id}',		[App\Http\Controllers\Backend\PrintInvoice\PrintInvoiceController::class, 'printAExRe'])->name('print-all-expense-receipt');
 	});
 });
 
 require __DIR__ . '/webuser.php';
 
-Auth::routes();
+// Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

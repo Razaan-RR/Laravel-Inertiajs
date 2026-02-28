@@ -7,7 +7,7 @@ import { IoIosArrowDown, IoMdClose } from "react-icons/io";
 import { MdBlock, MdDeleteOutline } from "react-icons/md";
 import { RiResetLeftFill } from "react-icons/ri";
 import { toast } from "react-toastify";
-import Loader from "./Loader";
+import Loader from "../componentes/Loader";
 import UseAuth from "../Hooks/UseAuth";
 import { Translations } from "../utils/Translations";
 

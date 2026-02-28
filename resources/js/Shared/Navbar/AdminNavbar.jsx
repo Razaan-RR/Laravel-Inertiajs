@@ -22,6 +22,7 @@ const FALLBACK_AVATAR =
 const AdminNavbar = () => {
     const { language, theme, setTheme, setLanguage } = UseAuth();
     const { url } = usePage();
+    const isActive = (path) => url.startsWith(path);
 
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const [notifications] = useState(3);
@@ -33,12 +34,16 @@ const AdminNavbar = () => {
 
     const t = Translations[language];
 
-    const navLinkClass = (path) =>
-        `px-4 py-2 rounded-md transition-colors duration-300 ${
-            url === path
-                ? "bg-primary text-primary-content font-semibold"
-                : "hover:bg-primary hover:text-primary-content"
-        }`;
+    const navLinkClass = (path) => {
+        return `
+            p-2 rounded-md transition-all
+                ${
+                    url.startsWith(path)
+                    ? "bg-primary text-white font-semibold"
+                    : "hover:bg-primary-light"
+                }
+            `;
+        };
 
     const handleThemeToggle = () => {
         const newTheme = theme === "light" ? "dark" : "light";
@@ -100,7 +105,7 @@ const AdminNavbar = () => {
             <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-16 relative">
                 {/* LOGO */}
                 <div className="flex items-center">
-                    <Link href="/dashboard">
+                    <Link href="/admin/dashboard">
                         <img src={Logo} alt="logo" className="pl-4 h-7.5" />
                     </Link>
                 </div>
@@ -110,7 +115,7 @@ const AdminNavbar = () => {
                     <li>
                         <Link
                             href="/admin/dashboard"
-                            className={navLinkClass("/dashboard")}
+                            className={navLinkClass("/admin/dashboard")}
                         >
                             {t.dashboard}
                         </Link>
@@ -133,7 +138,7 @@ const AdminNavbar = () => {
                         >
                             <li>
                                 <Link
-                                    href="/table"
+                                    href="/admin/table"
                                     className="block px-4 py-2 hover:bg-primary hover:text-white"
                                 >
                                     {t.table}
@@ -231,8 +236,8 @@ const AdminNavbar = () => {
                     {/* Profile */}
                     <li>
                         <Link
-                            href="/profile"
-                            className={navLinkClass("/profile")}
+                            href="/admin/profile"
+                            className={navLinkClass("/admin/profile")}
                         >
                             {t.profile}
                         </Link>
