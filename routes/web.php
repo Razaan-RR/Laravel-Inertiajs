@@ -70,6 +70,15 @@ Route::middleware(['auth'])->group(function () {
 	});
 });
 
+Route::post('/theme', function (\Illuminate\Http\Request $request) {
+    $request->validate([
+        'theme' => 'required|in:light,dark',
+    ]);
+
+    session(['theme' => $request->theme]);
+
+    return back();
+})->name('theme.update');
 
 
 

@@ -2,11 +2,11 @@ import AdminNavbar from "../Shared/Navbar/AdminNavbar";
 import Loader from "../componentes/Loader";
 import UseAuth from "../Hooks/UseAuth";
 import { IoSettingsSharp } from "react-icons/io5";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import InstituteSetting from "../Pages/InstituteSetting/InstituteSetting";
 
-const AdminLayout = ({children}) => {
-    const { loading } = UseAuth();
+const AdminLayout = ({ children }) => {
+    const { loading, theme } = UseAuth();
     const [panelHide, setPanelHide] = useState(true);
     const [open, setOpen] = useState(false);
 
@@ -17,6 +17,12 @@ const AdminLayout = ({children}) => {
             setPanelHide(true);
         }, 300);
     };
+
+    useEffect(() => {
+        if (theme) {
+            document.documentElement.setAttribute("data-theme", theme);
+        }
+    }, [theme]);
 
     return (
         <div className=" relative bg-base-100 print:bg-base-200">
