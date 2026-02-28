@@ -164,7 +164,7 @@ const AdminNavbar = () => {
                         >
                             <li>
                                 <Link
-                                    href="/card"
+                                    href="/admin/card"
                                     className="block px-4 py-2 hover:bg-primary hover:text-white"
                                 >
                                     {t.card}
@@ -172,7 +172,7 @@ const AdminNavbar = () => {
                             </li>
                             <li>
                                 <Link
-                                    href="/cardtable"
+                                    href="/admin/cardtable"
                                     className="block px-4 py-2 hover:bg-primary hover:text-white"
                                 >
                                     {t.cardtable}
@@ -198,7 +198,7 @@ const AdminNavbar = () => {
                         >
                             <li>
                                 <Link
-                                    href="/form"
+                                    href="/admin/form"
                                     className="block px-4 py-2 hover:bg-primary hover:text-white"
                                 >
                                     {t.form}
@@ -225,7 +225,7 @@ const AdminNavbar = () => {
                         >
                             <li>
                                 <Link
-                                    href="/support"
+                                    href="/admin/support"
                                     className="block px-4 py-2 hover:bg-primary hover:text-white"
                                 >
                                     {t.support}

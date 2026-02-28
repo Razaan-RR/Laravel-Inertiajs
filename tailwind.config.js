@@ -1,3 +1,4 @@
+import daisyui from "daisyui";
 
 export default {
     content: [
@@ -5,6 +6,10 @@ export default {
         "./resources/**/*.js",
         "./resources/**/*.jsx",
     ],
+    theme: {
+        extend: {},
+    },
+    plugins: [daisyui],
     daisyui: {
         themes: ["light", "dark"],
     },

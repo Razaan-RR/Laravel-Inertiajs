@@ -14,33 +14,36 @@ Aos.init();
 const queryClient = new QueryClient();
 
 createInertiaApp({
-    resolve: (name) => {
+    resolve: async (name) => {
         const pages = import.meta.glob("./Pages/**/*.jsx");
 
-        return pages[`./Pages/${name}.jsx`]().then((module) => {
-            const page = module.default;
+        const module = await pages[`./Pages/${name}.jsx`]();
+        const page = module.default;
 
-            page.layout =
-                page.layout || ((page) => <AdminLayout>{page}</AdminLayout>);
+        // Default layout wrapper
+        page.layout =
+            page.layout ||
+            ((page) => (
+                <AuthProvider>
+                    <AdminLayout>{page}</AdminLayout>
+                </AuthProvider>
+            ));
 
-            return module;
-        });
+        return module;
     },
 
     setup({ el, App, props }) {
         createRoot(el).render(
             <StrictMode>
                 <QueryClientProvider client={queryClient}>
-                    <AuthProvider>
-                        <App {...props} />
-                        <ToastContainer
-                            position="top-right"
-                            autoClose={2000}
-                            theme="colored"
-                        />
-                    </AuthProvider>
+                    <App {...props} />
+                    <ToastContainer
+                        position="top-right"
+                        autoClose={2000}
+                        theme="colored"
+                    />
                 </QueryClientProvider>
-            </StrictMode>,
+            </StrictMode>
         );
     },
 });

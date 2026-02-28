@@ -1,391 +1,257 @@
-import React, { useEffect, useState } from "react";
-import { useForm, usePage } from "@inertiajs/inertia-react";
-import Swal from "sweetalert2";
-import AppLayout from "../AppLayout";
+import { useEffect, useMemo, useState } from "react";
+import { MdManageAccounts } from "react-icons/md";
+import { toast } from "react-toastify";
+import { Translations } from "../../../utils/Translations";
+import UseAuth from "../../../Hooks/UseAuth";
 
-const Index = () => {
-    const { auth, flash, errors: inertiaErrors } = usePage().props;
-    const user = auth.user;
+const FALLBACK_AVATAR =
+    "https://img.freepik.com/premium-vector/boy-face-design-illustrat_1063011-590.jpg?semt=ais_hybrid&w=740&q=80";
+
+const Profile = () => {
+    const { language } = UseAuth();
+    const t = Translations[language];
+    const [profile, setProfile] = useState(null);
+    const [profileLoading, setProfileLoading] = useState(true);
+    const [userData, setUserData] = useState(null);
+    const profileImageUrl = userData?.image
+        ? userData.image.startsWith("http")
+            ? userData.image
+            : userData.image
+        : FALLBACK_AVATAR;
+
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
-        if (flash?.success) Swal.fire("Success", flash.success, "success");
-        if (flash?.error) Swal.fire("Error", flash.error, "error");
+        let mounted = true;
 
-        const errorKeys = Object.keys(inertiaErrors);
-        if (errorKeys.length > 0) {
-            const firstErrorMessage = inertiaErrors[errorKeys[0]];
-            Swal.fire("Error", firstErrorMessage, "error");
-        }
-    }, [flash, inertiaErrors]);
+        const fetchProfile = async () => {
+            setProfileLoading(true);
+        };
 
-    //To update profile basic...
-    const profileForm = useForm({
-        name: user.name || "",
-        email: user.email || "",
-        mobile: user.mobile || "",
-        image: null,
-    });
+        fetchProfile();
 
-    const submitProfile = (e) => {
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
+    const profileName = userData?.name || "N/A";
+    const profileRole = userData?.role || "N/A";
+    const profileEmail = userData?.email || "N/A";
+    const profileMobile = userData?.mobile || "N/A";
+    const profileAddress = userData?.address || "N/A";
+
+    const profileImage = useMemo(() => {
+        const img = userData?.image;
+        if (!img) return FALLBACK_AVATAR;
+
+        if (typeof img === "string" && img.startsWith("http")) return img;
+
+        return img;
+    }, [userData]);
+
+    const handleChangePassword = async (e) => {
         e.preventDefault();
 
-        if (profileForm.data.mobile.length !== 11) {
-            Swal.fire("Error", "Mobile number must be 11 digits", "error");
-            return;
+        if (!oldPassword || !newPassword || !confirmPassword) {
+            return toast.error("All password fields are required!");
         }
 
-        profileForm.post(`/admin/profile/update/${user.id}`, {
-            forceFormData: true,
-            preserveState: true,
-            preserveScroll: true,
-            onSuccess: (page) => {
-                profileForm.setData("image", null);
-                const updatedUser = page.props.auth.user;
-                if (updatedUser.image) {
-                    setPreviewM(
-                        `/storage/uploads/user_img/${updatedUser.image}`
-                    );
-                } else {
-                    setPreviewM(
-                        "/backend/template-assets/images/img_preview.png"
-                    );
-                }
-            },
-
-            onError: (errors) => {
-                console.log("Validation Failed:", errors);
-            },
-        });
-    };
-
-    //To password update...
-    const passwordForm = useForm({
-        old_password: "",
-        new_password: "",
-        confirm_password: "",
-    });
-
-    const submitPassword = (e) => {
-        e.preventDefault();
-
-        passwordForm.post(`/admin/security/update`, {
-            forceFormData: true,
-            onSuccess: () => {
-                passwordForm.reset();
-                document.getElementById("passwordModalClose")?.click();
-            },
-            onError: (errors) => {
-                const firstError = Object.values(errors)[0];
-                Swal.fire("Error", firstError, "error");
-            },
-        });
-    };
-
-    //Image preview...
-    const [userPhoto, setPreviewM] = useState(
-        user.image
-            ? `/storage/uploads/user_img/${user.image}`
-            : "/backend/template-assets/images/img_preview.png"
-    );
-    const [preview, setPreview] = useState(
-        user.image
-            ? `/storage/uploads/user_img/${user.image}`
-            : "/backend/template-assets/images/img_preview.png"
-    );
-
-    const onImageChange = (e) => {
-        const file = e.target.files[0];
-        profileForm.setData("image", file);
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => setPreview(e.target.result);
-            reader.readAsDataURL(file);
+        if (newPassword !== confirmPassword) {
+            return toast.error("New password and confirmation do not match!");
         }
+
+        setLoading(true);
     };
 
     return (
-        <AppLayout>
-            <div className="app-content content">
-                <div className="d-flex justify-content-between my-3">
-                    <h3>Personal Profile</h3>
-                </div>
-
-                <div className="row">
-                    {/* USER INFO */}
-                    <div className="col-xl-4 col-lg-5 col-md-5">
-                        <div className="card">
-                            <div className="card-header">
-                                <h4>User Details</h4>
-                            </div>
-
-                            <div className="card-body text-center">
+        <div className="lg:flex p-2 lg:p-0">
+            {/* LEFT PROFILE CARD */}
+            <div className="flex flex-col w-full lg:w-1/4 gap-4 mt-5 lg:ml-4">
+                <div className="w-full overflow-hidden shadow-md border border-slate-200 bg-base-200 transition-transform duration-300 hover:scale-[1.01]">
+                    <div className="flex justify-center items-center mt-4">
+                        <div className="w-40 h-40 md:w-52 md:h-52 rounded-full overflow-hidden bg-base-200 border-2 border-green-500">
+                            {profileLoading ? (
+                                <div className="w-full h-full animate-pulse bg-slate-200" />
+                            ) : (
                                 <img
-                                    src={userPhoto}
-                                    className="rounded mb-2"
-                                    width="110"
-                                    height="110"
-                                    alt="avatar"
+                                    className="w-full h-full object-cover rounded-full"
+                                    src={profileImageUrl}
+                                    alt="Profile"
+                                    onError={(e) =>
+                                        (e.currentTarget.src = FALLBACK_AVATAR)
+                                    }
                                 />
+                            )}
+                        </div>
+                    </div>
 
-                                <h4>{user.name}</h4>
-                                <span className="badge bg-secondary">
-                                    {user.role}
-                                </span>
+                    <div className="text-center mt-3">
+                        <h1 className="font-semibold text-primary-content">
+                            profileName
+                        </h1>
+                    </div>
 
-                                <ul className="list-unstyled mt-3 text-start">
-                                    <li>
-                                        <strong>Name:</strong> {user.name}
-                                    </li>
-                                    <li>
-                                        <strong>Email:</strong> {user.email}
-                                    </li>
-                                    <li>
-                                        <strong>Mobile:</strong> {user.mobile}
-                                    </li>
-                                </ul>
+                    <div className="flex justify-center mt-2 mb-4">
+                        <span className="px-3 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-700">
+                            profileRole
+                        </span>
+                    </div>
+
+                    <div className="px-4 border-b border-accent pt-3">
+                        <h1 className="font-bold text-primary-content text-base">
+                            Details
+                        </h1>
+                    </div>
+
+                    <div className="px-4 pb-4 pt-2 text-xs sm:text-sm text-primary-content">
+                        <div className="flex gap-4">
+                            <div className="flex w-2/5 gap-2">
+                                <div className="flex-1 font-semibold space-y-1">
+                                    <p>{t.email}</p>
+                                    <p>{t.phone}</p>
+                                    <p>{t.address}</p>
+                                    <p>{t.status}</p>
+                                </div>
+                                <div className="flex-1 space-y-1">
+                                    {Array(4)
+                                        .fill(":")
+                                        .map((colon, idx) => (
+                                            <p key={idx}>{colon}</p>
+                                        ))}
+                                </div>
                             </div>
 
-                            <div className="card-footer">
-                                <button
-                                    className="btn btn-primary w-100"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#updateSecurity"
-                                >
-                                    Password Change
-                                </button>
+                            <div className="flex-1 w-3/5 space-y-1">
+                                <p>{profileEmail}</p>
+                                <p>{profileMobile}</p>
+                                <p>{profileAddress}</p>
+                                <p>
+                                    {userData?.status === 1
+                                        ? t.active
+                                        : "Inactive"}
+                                </p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="col-xl-8 col-lg-7 col-md-7">
-                        <div className="card shadow">
-                            <h4 className="card-header">
-                                Update Profile Basic
-                            </h4>
+                    <div className="flex items-center justify-center gap-4 my-5">
+                        <button className="bg-primary text-primary-content px-4 py-2 rounded">
+                            {t.edit}
+                        </button>
+                        <button className="bg-error-light text-error px-4 py-2 rounded">
+                            {t.suspend}
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-                            <form
-                                onSubmit={submitProfile}
-                                className="card-body"
+            {/* RIGHT SIDE */}
+            <div className="lg:flex flex-col w-full lg:w-3/4 gap-4 mt-5 mr-5 lg:ml-4">
+                <div className="flex items-center gap-6 overflow-x-scroll lg:overflow-x-visible">
+                    {/* <button className="flex gap-1 hover:bg-primary-light hover:text-black rounded-md font-semibold text-[16px] px-4 py-2">
+            <MdManageAccounts size={22} /> <span>Account</span>
+          </button> */}
+                    <button className="flex gap-1 hover:bg-primary-light hover:text-black rounded-md font-semibold text-[16px] px-4 py-2">
+                        <MdManageAccounts size={22} />{" "}
+                        <span>{t.security} </span>
+                    </button>
+                    {/* <button className="flex gap-1 hover:bg-primary-light hover:text-black rounded-md font-semibold text-[16px] px-4 py-2">
+            <MdManageAccounts size={22} /> <span>Billing & Plan</span>
+          </button> */}
+                    <button className="flex gap-1 hover:bg-primary-light hover:text-black rounded-md font-semibold text-[16px] px-4 py-2">
+                        <MdManageAccounts size={22} />{" "}
+                        <span>{t.notifications} </span>
+                    </button>
+                    {/* <button className="flex gap-1 hover:bg-primary-light hover:text-black rounded-md font-semibold text-[16px] px-4 py-2">
+            <MdManageAccounts size={22} /> <span>Connections</span>
+          </button> */}
+                </div>
+
+                <div className="px-5 py-4 rounded bg-base-200 shadow">
+                    <h5 className="w-full bg-base-200 mb-4 font-bold">
+                        {t.change}
+                        {t.password}
+                    </h5>
+
+                    <form
+                        id="formChangePassword"
+                        method="POST"
+                        className="space-y-6"
+                        noValidate
+                        onSubmit={handleChangePassword}
+                    >
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                            <div className="space-y-1">
+                                <label className="block text-sm font-medium text-primary-content">
+                                    {t.old} {t.password}
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        className="block w-full rounded-lg border border-accent bg-base-200 px-3 py-2 text-sm text-primary-content placeholder-accent outline-none focus:border-primary"
+                                        type="password"
+                                        placeholder={t.password}
+                                        value={oldPassword}
+                                        onChange={(e) =>
+                                            setOldPassword(e.target.value)
+                                        }
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <label className="block text-sm font-medium text-primary-content">
+                                    {t.new} {t.password}
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        className="block w-full rounded-lg border border-accent bg-base-200 px-3 py-2 text-sm text-primary-content placeholder-accent outline-none focus:border-primary"
+                                        type="password"
+                                        placeholder={t.password}
+                                        value={newPassword}
+                                        onChange={(e) =>
+                                            setNewPassword(e.target.value)
+                                        }
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <label className="block text-sm font-medium text-primary-content">
+                                    {t.confirm} {t.new} {t.password}
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        className="block w-full rounded-lg border border-accent bg-base-200 px-3 py-2 text-sm text-primary-content placeholder-accent outline-none focus:border-primary"
+                                        type="password"
+                                        placeholder={t.password}
+                                        value={confirmPassword}
+                                        onChange={(e) =>
+                                            setConfirmPassword(e.target.value)
+                                        }
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button
+                                type="submit"
+                                className="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-primary-content shadow-sm transition hover:bg-primary-light hover:text-black disabled:opacity-60"
+                                disabled={loading}
                             >
-                                <div className="row">
-                                    <div className="col-md-8">
-                                        <label>
-                                            Name{" "}
-                                            <span className=" text-danger">
-                                                *
-                                            </span>
-                                        </label>
-                                        <input
-                                            className="form-control mb-2"
-                                            value={profileForm.data.name}
-                                            onChange={(e) =>
-                                                profileForm.setData(
-                                                    "name",
-                                                    e.target.value
-                                                )
-                                            }
-                                        />
-
-                                        <label>
-                                            Mobile{" "}
-                                            <span className=" text-danger">
-                                                *
-                                            </span>
-                                        </label>
-                                        <input
-                                            className="form-control mb-2"
-                                            value={profileForm.data.mobile}
-                                            onChange={(e) =>
-                                                profileForm.setData(
-                                                    "mobile",
-                                                    e.target.value
-                                                )
-                                            }
-                                        />
-
-                                        <label>
-                                            Email{" "}
-                                            <span className=" text-danger">
-                                                *
-                                            </span>
-                                        </label>
-                                        <input
-                                            className="form-control"
-                                            value={profileForm.data.email}
-                                            onChange={(e) =>
-                                                profileForm.setData(
-                                                    "email",
-                                                    e.target.value
-                                                )
-                                            }
-                                        />
-                                    </div>
-
-                                    <div className="col-md-4">
-                                        <div className="form-group">
-                                            <label>
-                                                Profile Photo{" "}
-                                                <span className="text-danger"></span>
-                                            </label>
-                                            <br />
-
-                                            <div className="position-relative custom-soft-setting dropzone">
-                                                <div className="select_imgWith_preview py-2">
-                                                    <img
-                                                        id="uploadPreview1"
-                                                        src={preview}
-                                                        alt="Profile Preview"
-                                                    />
-
-                                                    <div
-                                                        id="dropzone-block"
-                                                        className="custom-media-upload-block mt-3"
-                                                    ></div>
-
-                                                    <input
-                                                        id="uploadImage1"
-                                                        type="file"
-                                                        accept="image/*"
-                                                        onChange={onImageChange}
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            {profileForm.errors.image && (
-                                                <small className="text-danger">
-                                                    {profileForm.errors.image}
-                                                </small>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button
-                                    className="btn btn-success w-100 mt-3"
-                                    disabled={profileForm.processing}
-                                >
-                                    Update Profile
-                                </button>
-                            </form>
+                                {t.change}
+                                {t.password}
+                            </button>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
-
-            {/* =========================
-               PASSWORD CHANGE MODAL
-            ========================= */}
-            <div
-                className="modal fade"
-                id="updateSecurity"
-                tabIndex="-1"
-                data-bs-backdrop="static"
-            >
-                <div className="modal-dialog modal-dialog-centered max-width-900px">
-                    <div className="modal-content">
-                        <form onSubmit={submitPassword}>
-                            <div className="modal-header">
-                                <h5>Password Update</h5>
-                                <button
-                                    id="passwordModalClose"
-                                    type="button"
-                                    className="btn-close"
-                                    data-bs-dismiss="modal"
-                                />
-                            </div>
-
-                            <div className="modal-body">
-                                <div className="row">
-                                    <div className="col-md-12 mb-2">
-                                        <div className="form-group">
-                                            <label for="old_password">
-                                                Old Password{" "}
-                                                <span className=" text-danger">
-                                                    *
-                                                </span>
-                                            </label>
-                                            <input
-                                                type="password"
-                                                className="form-control"
-                                                placeholder="Old Password"
-                                                onChange={(e) =>
-                                                    passwordForm.setData(
-                                                        "old_password",
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="col-md-6 mb-2">
-                                        <div className="form-group">
-                                            <label for="new_password">
-                                                New Password{" "}
-                                                <span className=" text-danger">
-                                                    *
-                                                </span>
-                                            </label>
-                                            <input
-                                                type="password"
-                                                className="form-control"
-                                                placeholder="New Password"
-                                                onChange={(e) =>
-                                                    passwordForm.setData(
-                                                        "new_password",
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="col-md-6 mb-2">
-                                        <div className="form-group">
-                                            <label for="confirm_password">
-                                                Confirm Password{" "}
-                                                <span className=" text-danger">
-                                                    *
-                                                </span>
-                                            </label>
-                                            <input
-                                                type="password"
-                                                className="form-control"
-                                                placeholder="Confirm Password"
-                                                onChange={(e) =>
-                                                    passwordForm.setData(
-                                                        "confirm_password",
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="modal-footer">
-                                <button
-                                    type="submit"
-                                    className="btn btn-success"
-                                    disabled={passwordForm.processing}
-                                >
-                                    Update
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-danger"
-                                    data-bs-dismiss="modal"
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </AppLayout>
+        </div>
     );
 };
 
-export default Index;
+export default Profile;

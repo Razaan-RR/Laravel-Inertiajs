@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useForm, usePage } from "@inertiajs/inertia-react";
+import { Link, useForm, usePage } from "@inertiajs/react";
 import { Inertia } from "@inertiajs/inertia";
 import Swal from "sweetalert2";
 import AppLayout from "../AppLayout";

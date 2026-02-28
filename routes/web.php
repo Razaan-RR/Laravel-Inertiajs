@@ -63,9 +63,9 @@ Route::middleware(['auth'])
 			return Inertia::render('Form');
 		})->name('admin.form');
 
-		Route::get('/setting', function () {
-			return Inertia::render('Setting');
-		})->name('admin.setting');
+		Route::get('/support', function () {
+			return Inertia::render('AdminPages/Support/Support');
+		})->name('admin.support');
 
 		Route::get('/profile', function () {
 			return Inertia::render('Profile/Profile');
