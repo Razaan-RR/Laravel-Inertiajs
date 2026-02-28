@@ -15,7 +15,7 @@ const Dashboard = () => {
     return (
         <div className="p-6 space-y-8 bg-base-100 min-h-screen bg-[#F7F5F3]">
             {/* ===== Welcome Section ===== */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-primary-content p-8 rounded-2xl shadow-lg">
+            <div className="text-[#180D3E] flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-primary-content p-8 rounded-2xl shadow-lg">
                 <div>
                     <h1 className="text-4xl md:text-5xl font-bold leading-tight">
                         {t.welcome} 👋
