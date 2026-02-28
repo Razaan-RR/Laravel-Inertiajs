@@ -68,7 +68,7 @@ const Profile = () => {
     };
 
     return (
-        <div className="lg:flex p-2 lg:p-0">
+        <div className="lg:flex p-2 lg:p-0 text-base-content">
             {/* LEFT PROFILE CARD */}
             <div className="flex flex-col w-full lg:w-1/4 gap-4 mt-5 lg:ml-4">
                 <div className="w-full overflow-hidden shadow-md border border-slate-200 bg-base-200 transition-transform duration-300 hover:scale-[1.01]">

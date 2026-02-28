@@ -129,7 +129,7 @@ const Support = () => {
 
     // ---------------- UI ----------------
     return (
-        <div className="sm:flex w-full h-screen">
+        <div className="sm:flex w-full h-screen text-base-content">
             {/* SIDEBAR */}
             <div className={`w-full sm:w-[35%] bg-base-200 ${activeTicketId ? "hidden sm:block" : ""}`}>
                 {/* Header */}

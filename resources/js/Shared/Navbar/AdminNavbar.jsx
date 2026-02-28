@@ -39,11 +39,11 @@ const AdminNavbar = () => {
             p-2 rounded-md transition-all
                 ${
                     url.startsWith(path)
-                    ? "bg-primary text-white font-semibold"
-                    : "hover:bg-primary-light"
+                        ? "bg-primary text-white font-semibold"
+                        : "hover:bg-primary-light"
                 }
             `;
-        };
+    };
 
     const handleThemeToggle = () => {
         const newTheme = theme === "light" ? "dark" : "light";
@@ -101,7 +101,7 @@ const AdminNavbar = () => {
 
     const nextLanguage = language === "en" ? "bn" : "en";
     return (
-        <div className="sticky top-0 left-0 w-full bg-base-200 shadow-sm">
+        <div className="sticky top-0 left-0 w-full bg-base-200 shadow-sm z-9999">
             <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-16 relative">
                 {/* LOGO */}
                 <div className="flex items-center">
@@ -111,7 +111,7 @@ const AdminNavbar = () => {
                 </div>
 
                 {/* NAV LINKS */}
-                <ul className="hidden lg:flex flex-1 justify-center items-center text-base font-medium">
+                <ul className="hidden lg:flex flex-1 justify-center items-center text-base font-medium text-base-content">
                     <li>
                         <Link
                             href="/admin/dashboard"
@@ -293,7 +293,10 @@ const AdminNavbar = () => {
                             aria-label="Notifications"
                             aria-expanded={isNotificationOpen}
                         >
-                            <IoMdNotificationsOutline size={34} />
+                            <IoMdNotificationsOutline
+                                size={34}
+                                className="text-base-content"
+                            />
                             <span className="absolute text-error-content -top-0.5 -right-0.5 h-5 w-5 rounded-full bg-error flex items-center justify-center text-xs">
                                 5
                             </span>
