@@ -38,15 +38,15 @@ use Inertia\Inertia;
 Route::middleware(['auth'])->group(function () {
 
 	Route::get('/', function () {
-		return redirect('/deshboard');
+		return redirect('/dashboard');
 	});
 
-	Route::get('/deshboard', function () {
-		return Inertia::render('AdminPages/Deshboard/Deshboard');
+	Route::get('/dashboard', function () {
+		return Inertia::render('AdminPages/Dashboard/Dashboard');
 	});
 
 	Route::get('/table', function () {
-		return Inertia::render('componentes/Table');
+		return Inertia::render('Table');
 	});
 
 	Route::get('/card', function () {
@@ -57,8 +57,8 @@ Route::middleware(['auth'])->group(function () {
 		return Inertia::render('Cardtable');
 	});
 
-	Route::get('/from', function () {
-		return Inertia::render('From');
+	Route::get('/form', function () {
+		return Inertia::render('Form');
 	});
 
 	Route::get('/setting', function () {

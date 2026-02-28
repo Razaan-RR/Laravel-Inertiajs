@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Aos from "aos";
+import AdminLayout from "./Layout/AdminLayout";
 
 Aos.init();
 
@@ -15,9 +16,15 @@ const queryClient = new QueryClient();
 createInertiaApp({
     resolve: (name) => {
         const pages = import.meta.glob("./Pages/**/*.jsx");
-        const page = pages[`./Pages/${name}.jsx`];
-        if (!page) throw new Error(`Page not found: ${name}`);
-        return page();
+
+        return pages[`./Pages/${name}.jsx`]().then((module) => {
+            const page = module.default;
+
+            page.layout =
+                page.layout || ((page) => <AdminLayout>{page}</AdminLayout>);
+
+            return module;
+        });
     },
 
     setup({ el, App, props }) {

@@ -1,96 +1,63 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { BsMoonStarsFill } from "react-icons/bs";
 import { FaFileInvoiceDollar, FaRegUserCircle } from "react-icons/fa";
 import { FaQuestion } from "react-icons/fa6";
 import { GoSun } from "react-icons/go";
-import {
-    IoIosArrowDown,
-    IoIosArrowUp,
-    IoIosLogOut,
-    IoMdNotificationsOutline,
-} from "react-icons/io";
-import { IoClose, IoMailOpenOutline } from "react-icons/io5";
+import { IoIosLogOut } from "react-icons/io";
 import { MdOutlineSettings } from "react-icons/md";
 import { TbCurrencyDollar } from "react-icons/tb";
 import { Link, usePage, router } from "@inertiajs/react";
 import { toast } from "react-toastify";
 import Logo from "../../assets/logo/wbLogo.png";
-import UseAxiosSecure from "../../Hooks/UseAxiosSecure";
 import UseAuth from "../../Hooks/UseAuth";
 import { Translations } from "../../utils/Translations";
 
 const FALLBACK_AVATAR =
-    "https://img.freepik.com/premium-vector/boy-face-design-illustrat_1063011-590.jpg?semt=ais_hybrid&w=740&q=80";
-
-const startsWithSegment = (pathname, prefix) =>
-    pathname === prefix || pathname.startsWith(prefix + "/");
+    "https://img.freepik.com/premium-vector/boy-face-design-illustrat_1063011-590.jpg";
 
 const AdminNavbar = () => {
-    const { language, toggleLanguage, theme, setTheme } = UseAuth();
-    const nextLanguage = language === "en" ? "bn" : "en";
-    const axiosSecure = UseAxiosSecure();
-
+    const { language, theme, setTheme } = UseAuth();
     const { url } = usePage();
 
-    const dropdownRef = useRef(null);
-    const profileImageRef = useRef(null);
     const [isDropdownVisible, setDropdownVisible] = useState(false);
-    const isActive = (path) => {
-        return url === path || url.startsWith(path + "/");
-    };
-
-    const notificationDropdownRef = useRef(null);
-    const notificationIconRef = useRef(null);
-    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const sidebarRef = useRef(null);
+    const dropdownRef = useRef(null);
 
     const t = Translations[language];
 
-    const academicPrefixes = ["/table"];
-    const studentPrefixes = ["/card", "/cardtable"];
-    const examPrefixes = ["/from", "/login", "/register"];
-    const settingsPrefixes = ["/support"];
-
-    const isParentActive = (prefixes) =>
-        prefixes.some((p) => startsWithSegment(url, p));
-
-    const toggleDropdown = () => setDropdownVisible((p) => !p);
-    const toggleNotificationDropdown = () => setIsNotificationOpen((p) => !p);
-    const toggleSidebar = () => setIsSidebarOpen((p) => !p);
-
-    const handleMenuClick = () => {
-        setDropdownVisible(false);
-        setIsSidebarOpen(false);
-    };
+    const navLinkClass = (path) =>
+        `px-4 py-2 rounded-md transition-colors duration-300 ${
+            url === path
+                ? "bg-primary text-primary-content font-semibold"
+                : "hover:bg-primary hover:text-primary-content"
+        }`;
 
     const handleThemeToggle = () => {
         const newTheme = theme === "light" ? "dark" : "light";
         setTheme(newTheme);
+
         toast.success(
             newTheme === "dark" ? "Dark Mode Enabled" : "Light Mode Enabled",
-            { position: "top-right", autoClose: 2000, theme: newTheme },
+            { autoClose: 2000 },
         );
     };
 
-    const navLinkClass = (path) =>
-        `block min-w-40 p-2 rounded-md transition-colors text-nowrap ${
-            startsWithSegment(url, path)
-                ? "bg-primary text-white font-semibold"
-                : "hover:bg-primary-light hover:text-black"
-        }`;
+    const handleLogout = () => {
+        localStorage.clear();
+        router.visit("/login");
+    };
 
     return (
-        <>
-            <div className="navbar sticky top-0 left-0 w-full z-40 px-5 bg-base-200 shadow-sm">
-                <div className="navbar-start -my-4">
+        <div className="sticky top-0 left-0 w-full z-40 bg-base-200 shadow-sm">
+            <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-16 relative">
+                {/* LOGO */}
+                <div className="flex items-center">
                     <Link href="/dashboard">
-                        <img src={Logo} alt="logo" />
+                        <img src={Logo} alt="logo" className="pl-4 h-7.5" />
                     </Link>
                 </div>
 
-                <ul className="navbar-center hidden lg:flex space-x-2">
+                {/* NAV LINKS */}
+                <ul className="hidden lg:flex flex-1 justify-center gap-4 text-base font-medium">
                     <li>
                         <Link
                             href="/dashboard"
@@ -99,19 +66,16 @@ const AdminNavbar = () => {
                             {t.dashboard}
                         </Link>
                     </li>
-
                     <li>
                         <Link href="/table" className={navLinkClass("/table")}>
                             {t.table}
                         </Link>
                     </li>
-
                     <li>
                         <Link href="/card" className={navLinkClass("/card")}>
                             {t.card}
                         </Link>
                     </li>
-
                     <li>
                         <Link
                             href="/cardtable"
@@ -120,13 +84,11 @@ const AdminNavbar = () => {
                             {t.cardtable}
                         </Link>
                     </li>
-
                     <li>
-                        <Link href="/from" className={navLinkClass("/from")}>
+                        <Link href="/form" className={navLinkClass("/form")}>
                             {t.form}
                         </Link>
                     </li>
-
                     <li>
                         <Link
                             href="/support"
@@ -135,7 +97,6 @@ const AdminNavbar = () => {
                             {t.settings}
                         </Link>
                     </li>
-
                     <li>
                         <Link
                             href="/profile"
@@ -146,7 +107,9 @@ const AdminNavbar = () => {
                     </li>
                 </ul>
 
-                <div className="navbar-end">
+                {/* RIGHT SIDE */}
+                <div className="flex items-center gap-4">
+                    {/* Theme Toggle */}
                     <button onClick={handleThemeToggle}>
                         {theme === "light" ? (
                             <GoSun className="text-2xl" />
@@ -155,85 +118,75 @@ const AdminNavbar = () => {
                         )}
                     </button>
 
+                    {/* Avatar */}
                     <div
-                        ref={profileImageRef}
-                        onClick={toggleDropdown}
-                        className="w-10 h-10 overflow-hidden rounded-full cursor-pointer ml-2"
+                        onClick={() => setDropdownVisible(!isDropdownVisible)}
+                        className="w-10 h-10 overflow-hidden rounded-full cursor-pointer"
                     >
                         <img
-                            className="w-full h-full object-cover rounded-full"
+                            className="w-full h-full object-cover"
                             src={FALLBACK_AVATAR}
                             alt="Profile"
                         />
                     </div>
 
+                    {/* DROPDOWN */}
                     {isDropdownVisible && (
-                        <div
-                            ref={dropdownRef}
-                            className="absolute right-8 top-14 mt-3 w-56 bg-base-100 shadow-lg rounded-md"
-                        >
-                            <ul className="py-3 space-y-3">
+                        <div className="absolute right-6 top-16 w-56 bg-base-100 shadow-lg rounded-md p-3">
+                            <ul className="space-y-3">
                                 <li>
                                     <Link
-                                        href="/admin/profile"
-                                        className="flex items-center gap-4 px-4 hover:bg-base-200"
-                                        onClick={handleMenuClick}
+                                        href="/profile"
+                                        className="flex items-center gap-3 hover:bg-base-200 p-2 rounded"
                                     >
-                                        <FaRegUserCircle size={20} />
+                                        <FaRegUserCircle />
                                         {t.profile}
                                     </Link>
                                 </li>
 
                                 <li>
                                     <Link
-                                        href="/admin/profile"
-                                        className="flex items-center gap-4 px-4 hover:bg-base-200"
-                                        onClick={handleMenuClick}
+                                        href="/support"
+                                        className="flex items-center gap-3 hover:bg-base-200 p-2 rounded"
                                     >
-                                        <MdOutlineSettings size={20} />
+                                        <MdOutlineSettings />
                                         {t.settings}
                                     </Link>
                                 </li>
 
                                 <li>
                                     <Link
-                                        href="/admin/profile"
-                                        className="flex items-center gap-4 px-4 hover:bg-base-200"
-                                        onClick={handleMenuClick}
+                                        href="/billing"
+                                        className="flex items-center gap-3 hover:bg-base-200 p-2 rounded"
                                     >
-                                        <FaFileInvoiceDollar size={20} />
+                                        <FaFileInvoiceDollar />
                                         {t.billing}
                                     </Link>
                                 </li>
 
                                 <li>
                                     <Link
-                                        href="/admin/profile"
-                                        className="flex items-center gap-4 px-4 hover:bg-base-200"
-                                        onClick={handleMenuClick}
+                                        href="/pricing"
+                                        className="flex items-center gap-3 hover:bg-base-200 p-2 rounded"
                                     >
-                                        <TbCurrencyDollar size={20} />
+                                        <TbCurrencyDollar />
                                         {t.pricing}
                                     </Link>
                                 </li>
 
                                 <li>
                                     <Link
-                                        href="/admin/profile"
-                                        className="flex items-center gap-4 px-4 hover:bg-base-200"
-                                        onClick={handleMenuClick}
+                                        href="/faq"
+                                        className="flex items-center gap-3 hover:bg-base-200 p-2 rounded"
                                     >
-                                        <FaQuestion size={20} />
+                                        <FaQuestion />
                                         {t.faq}
                                     </Link>
                                 </li>
 
-                                <li className="px-4">
+                                <li>
                                     <button
-                                        onClick={() => {
-                                            localStorage.clear();
-                                            router.visit("/login");
-                                        }}
+                                        onClick={handleLogout}
                                         className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-error text-white"
                                     >
                                         {t.logout}
@@ -245,7 +198,7 @@ const AdminNavbar = () => {
                     )}
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 
